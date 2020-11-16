@@ -105,7 +105,7 @@ from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 
 target = "D:\\Stocks_Financial_Data\\Reuter\\"
-i=0
+i = 0
 
 stock_input()
 stock_info(company_name, exchange, ticker)
@@ -132,13 +132,20 @@ while i < 1:
 
     elif choice == '3':
         print("Scraping data for", company_name)
-
-        folder_name = os.path.join(target, company_name)
+        new_target = os.path.join(target, exchange)
+        folder_name = os.path.join(new_target, company_name)
         try:
             os.mkdir(folder_name)
             print("Create folder for", folder_name)
         except FileExistsError:
             print(folder_name, "already exist")
+
+        except FileNotFoundError:
+            os.mkdir(new_target)
+            print("Create folder for", new_target)
+            os.mkdir(folder_name)
+            print("Create folder for", folder_name)
+
 
         data_list = ["income-statement", "balance-sheet", "cash-flow"]
         period_list = ["annual", "quarterly"]
