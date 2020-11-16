@@ -78,10 +78,26 @@ def create_folder(company_name):
         print(stock, "folder already exist")
 
 def stock_info(name, exchange, ticker):
-    print("company name is ", name)
-    print("stock exchange: ", exchange)
-    print("stock ticker: ", ticker)
+    print("Company Name:", name)
+    print("Stock Exchange:", exchange)
+    print("Stock Ticker:", ticker)
 
+def stock_input():
+    global symbol, stock, company_name, exchange, ticker, file_name, stock_info
+    j=0
+    while j<1:
+        try:
+            symbol = input("Please enter stock: ")
+            stock = FindStock(symbol)
+            company_name = stock.company_name_without_ticker()
+            exchange = stock.exchange()
+            ticker = stock.ticker()
+            file_name = stock.file_name()
+            j=j+1
+        except IndexError:
+            print("Unable to find", symbol, "in Reuters")
+            print("Please enter a valid symbol")
+            continue
 
 import os, re, os.path
 import pandas as pd
@@ -89,34 +105,49 @@ from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 
 target = "D:\\Stocks_Financial_Data\\Reuter\\"
+i=0
 
-# stock = input("Please enter stock: ")
-stock = "berkshire"
-stock = FindStock(stock)
-
-company_name = stock.company_name_without_ticker()
-exchange = stock.exchange()
-ticker = stock.ticker()
-file_name = stock.file_name()
-
+stock_input()
 stock_info(company_name, exchange, ticker)
 
+while i < 1:
 
-print("Scraping data for", company_name)
+    print("\n")
+    print("Please select an option\n")
+    print("1. Display Stock Data")
+    print("2. Select Stock")
+    print("3. Web Scrap Financial Statements")
+    print("")
 
-folder_name = os.path.join(target, company_name)
-try:
-    os.mkdir(folder_name)
-    print("Create folder for", folder_name)
-except FileExistsError:
-    print(folder_name, "already exist")
+    choice = input("Enter input: ")
+    print("\n")
+
+    if choice == '1':
+        stock_info(company_name, exchange, ticker)
 
 
-data_list = ["income-statement", "balance-sheet", "cash-flow"]
-period_list = ["annual", "quarterly"]
+    elif choice == '2':
+        stock_input()
+        stock_info(company_name, exchange, ticker)
+
+    elif choice == '3':
+        print("Scraping data for", company_name)
+
+        folder_name = os.path.join(target, company_name)
+        try:
+            os.mkdir(folder_name)
+            print("Create folder for", folder_name)
+        except FileExistsError:
+            print(folder_name, "already exist")
+
+        data_list = ["income-statement", "balance-sheet", "cash-flow"]
+        period_list = ["annual", "quarterly"]
+
+        for data in data_list:
+            for period in period_list:
+                csv_name = file_name + "_" + data + "_" + period + ".csv"  # determine file name after data frame is completed
+                reuter_data(ticker, data, period, folder_name, csv_name)
+    else:
+        print("Please Enter valid choice")
 
 
-for data in data_list:
-    for period in period_list:
-        csv_name = file_name + "_" + data + "_" + period + ".csv"  # determine file name after data frame is completed
-        reuter_data(ticker, data, period, folder_name, csv_name)
