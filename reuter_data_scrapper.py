@@ -84,7 +84,7 @@ def stock_info(name, exchange, ticker):
 
 def stock_input():
     global symbol, stock, company_name, exchange, ticker, file_name, stock_info
-    j=0
+    j = 0
     while j<1:
         try:
             symbol = input("Please enter stock: ")
@@ -93,7 +93,7 @@ def stock_input():
             exchange = stock.exchange()
             ticker = stock.ticker()
             file_name = stock.file_name()
-            j=j+1
+            j = 1
         except IndexError:
             print("Unable to find", symbol, "in Reuters")
             print("Please enter a valid symbol")
@@ -114,7 +114,7 @@ while i < 1:
 
     print("\n")
     print("Please select an option\n")
-    print("1. Display Stock Data")
+    print("1. Display Stock Profile")
     print("2. Select Stock")
     print("3. Web Scrap Financial Statements")
     print("")
